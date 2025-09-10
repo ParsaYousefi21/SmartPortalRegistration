@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}داشبورد معلم{% endblock %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+
+    .card {
+        margin: 25px auto;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 14px;
+        width: 750px;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 8px 15px;
+        font-weight: bold;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .card-body {
+        background: #f0f0f0;
+        padding: 10px 15px;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .student-list {
+        list-style: none;
+        padding: 0;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .student-list li {
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .student-info {
+        font-size: 15px;
+        color: #444;
+        min-width: 200px;
+        flex-grow: 1;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 6px;
+    }
+
+    .btn-grade {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 12px;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+    .btn-secondary {
+        background-color: #008fb3;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-decoration: none;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+    
+    .btn-outline {
+        border: 1px solid #17a2b8;
+        color: #17a2b8;
+        padding: 4px 9px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 12px;
+        background-color: white;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .no-students {
+        background: #fff7cc;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: 'Vazirmatn', sans-serif;
+    }
+</style>
+
+<div class="container mt-4" style="direction: rtl; font-family: 'Vazirmatn', sans-serif;">
+    <h2 style="text-align:center; margin-bottom: 25px;">📚 داشبورد معلم</h2>
+
+    {% if courses %}
+        {% for course in courses %}
+        <div class="card">
+            <div class="card-header">
+                درس: {{ course.title }}
+                (
+                {{ course.get_day1_display }} {{ course.start_time1|time:"H:i" }} تا {{ course.end_time1|time:"H:i" }}
+                {% if course.day2 %}
+                    | {{ course.get_day2_display }} {{ course.start_time2|time:"H:i" }} تا {{ course.end_time2|time:"H:i" }}
+                {% endif %}
+                )
+            </div>
+            <div class="card-body">
+                <div style="margin-bottom: 10px;">
+                    <a href="{% url 'add_content' %}" class="btn-secondary">➕ افزودن محتوای درسی</a>
+                </div>
+
+                {% with course.registration_set.all as regs %}
+                    {% if regs %}
+                    <ul class="student-list">
+                        {% for reg in regs %}
+                        <li>
+                            <div class="student-info">
+                                👤 {{ reg.student.first_name }} {{ reg.student.last_name }}
+                                | کد ملی: {{ reg.student.student_id }}
+                                | رشته: {{ reg.student.major }}
+                                |
+                                {% if reg.grade %}
+                                    نمره: {{ reg.grade }}
+                                {% else %}
+                                    نمره : ثبت نشده
+                                {% endif %}
+                            </div>
+                            <div class="btn-group">
+                                <a href="{% url 'add_grade' %}?student={{ reg.student.id }}&course={{ reg.course.id }}" class="btn-grade">
+                                    {% if reg.grade %}ویرایش نمره{% else %}ثبت نمره{% endif %}
+                                </a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="no-students">⛔ هنوز دانش‌آموزی ثبت‌نام نکرده.</div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align:center; color: red; margin-top: 30px;">⛔ هیچ دوره‌ای پیدا نشد.</div>
+    {% endif %}
+</div>
+{% endblock %}

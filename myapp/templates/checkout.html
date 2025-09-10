@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تسویه حساب</title>
+<style>
+    body { font-family: 'Vazirmatn', sans-serif; background:#f5f5f5; padding:20px; text-align:center; }
+    .container { background:white; padding:30px; max-width:500px; margin:auto; border-radius:8px; box-shadow:0 0 12px rgba(0,0,0,0.1); }
+    .btn { padding:10px 20px; margin:10px; font-size:16px; border:none; border-radius:5px; cursor:pointer; }
+    .btn-success { background:#28a745; color:white; }
+    .btn-fail { background:#dc3545; color:white; }
+    .btn-back { background:#007bff; color:white; text-decoration:none; display:inline-block; margin-top:10px; }
+    .message { margin-top:20px; padding:10px; border-radius:5px; display:none; font-weight:bold; }
+    .message.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+    .message.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2>💳 تسویه حساب</h2>
+    <p>برای نهایی کردن انتخاب واحد خود، گزینه پرداخت را انتخاب کنید:</p>
+
+    <div>
+        <button class="btn btn-success" data-status="success">پرداخت موفق</button>
+        <button class="btn btn-fail" data-status="fail">پرداخت ناموفق</button>
+    </div>
+
+    <a href="{% url 'choose_course' %}" class="btn-back">⬅ بازگشت به انتخاب واحد</a>
+
+    <div class="message" id="paymentMessage"></div>
+</div>
+
+<script>
+$(document).ready(function(){
+    $(".btn-success, .btn-fail").click(function(){
+        var status = $(this).data("status");
+        $.ajax({
+            url: "{% url 'checkout' %}",
+            type: "POST",
+            data: {
+                'payment_status': status,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response){
+                var msgDiv = $("#paymentMessage");
+                msgDiv.removeClass("success error").fadeIn();
+                if(response.status === "success"){
+                    msgDiv.addClass("success").text(response.message);
+                    $(".btn-success, .btn-fail").attr("disabled", true);
+                } else {
+                    msgDiv.addClass("error").text(response.message);
+                }
+            },
+            error: function(){
+                $("#paymentMessage").removeClass("success").addClass("error").text("❌ خطا در برقراری ارتباط با سرور").fadeIn();
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>

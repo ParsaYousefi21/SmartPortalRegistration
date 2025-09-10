@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}محتواهای درسی{% endblock %}
+
+{% block content %}
+<style>
+    .content-wrapper {
+        max-width: 800px;
+        margin: 30px auto;
+        font-family: 'Vazirmatn', sans-serif;
+        direction: rtl;
+    }
+
+    .content-box {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        padding: 15px;
+    }
+
+    .content-header {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .toggle-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .toggle-button:hover {
+        background-color: #0056b3;
+    }
+
+    .content-body {
+        display: none;
+        margin-top: 15px;
+    }
+
+    video, embed, img {
+        width: 100%;
+        max-height: 500px;
+        border-radius: 6px;
+    }
+</style>
+
+<div class="content-wrapper">
+    <h2 style="text-align: center; margin-bottom: 30px;">📚 محتواهای درسی شما</h2>
+
+    {% for content in contents %}
+    <div class="content-box">
+        <div class="content-header">
+            <span>درس: {{ content.course.title }} | عنوان: {{ content.title }}</span>
+            <button class="toggle-button" onclick="toggleContent('content-{{ forloop.counter }}')">نمایش</button>
+        </div>
+        <div id="content-{{ forloop.counter }}" class="content-body">
+            {% with url=content.file.url|lower %}
+                {% if ".pdf" in url %}
+                    <embed src="{{ content.file.url }}" type="application/pdf" height="500px" />
+                {% elif ".mp4" in url %}
+                    <video controls>
+                        <source src="{{ content.file.url }}" type="video/mp4">
+                        مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+                    </video>
+                {% elif ".png" in url or ".jpg" in url or ".jpeg" in url %}
+                    <img src="{{ content.file.url }}" alt="تصویر محتوای درسی" />
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    {% empty %}
+        <p style="text-align: center; color: rgb(0, 0, 0);">⛔ محتوایی برای نمایش وجود ندارد.</p>
+    {% endfor %}
+</div>
+
+<script>
+    function toggleContent(id) {
+        const content = document.getElementById(id);
+        const isVisible = content.style.display === 'block';
+        content.style.display = isVisible ? 'none' : 'block';
+    }
+</script>
+{% endblock %}

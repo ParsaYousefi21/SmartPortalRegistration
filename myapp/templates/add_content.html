@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% block title %}افزودن محتوای درسی{% endblock %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn-font@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+<style>
+body, input, select, button, p, h2, h3, h4, span {
+    font-family: 'Vazirmatn', sans-serif !important;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 50px auto;
+    align-items: stretch;
+}
+
+.form-wrapper {
+    flex: 1 1 400px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.form-wrapper h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #444;
+}
+
+input[type="text"],
+input[type="file"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #fafafa;
+    transition: border 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.content-wrapper {
+    flex: 1 1 400px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.content-wrapper h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #fdfdfd;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    padding: 10px 14px;
+    border-top: 1px solid #eee;
+    background-color: #fafafa;
+}
+
+.card-actions button {
+    flex: 1;
+    font-size: 14px;
+    padding: 10px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-view {
+    background-color: #28a745;
+    color: #fff;
+}
+.btn-view:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+.btn-delete:hover {
+    background-color: #b52a37;
+    transform: translateY(-1px);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+}
+.modal-content iframe, .modal-content img, .modal-content video {
+    width: 100%;
+    height: 80vh;
+    border: none;
+}
+.close-btn {
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    float: right;
+}
+@media(max-width: 900px){
+    .container{
+        flex-direction: column;
+        align-items: center;
+    }
+    .form-wrapper, .content-wrapper{
+        max-width: 90%;
+    }
+}
+</style>
+
+<div class="container">
+
+    <div class="form-wrapper">
+        <h2>افزودن محتوای درسی</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="id_course">درس مربوطه</label>
+            {{ form.course }}
+
+            <label for="id_title">عنوان محتوا</label>
+            {{ form.title }}
+
+            <label for="id_file">فایل محتوا</label>
+            {{ form.file }}
+
+            <button type="submit" class="btn-submit">➕ افزودن محتوا</button>
+        </form>
+    </div>
+
+    <div class="content-wrapper">
+        <h3>📚 لیست محتواهای قبلی</h3>
+        <div class="cards">
+            {% for item in contents %}
+            <div class="card">
+                <div class="card-header">{{ item.title }}</div>
+                <div class="card-actions">
+                    <button type="button" class="btn-view" data-file-url="{{ item.file.url }}">
+                        👁️ مشاهده
+                    </button>
+                    <button type="button" class="btn-delete" data-delete-url="{% url 'delete_content' item.id %}">
+                        🗑️ حذف
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id="previewModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" id="closeModal">بستن ✖</button>
+        <div id="filePreview"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('previewModal');
+    const filePreview = document.getElementById('filePreview');
+    const closeModal = document.getElementById('closeModal');
+
+    document.querySelectorAll('.btn-view').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const fileUrl = btn.getAttribute('data-file-url');
+            let content = "";
+
+            if (fileUrl.match(/\.(jpg|jpeg|png|gif)$/i)) {
+                content = `<img src="${fileUrl}" alt="preview">`;
+            } else if (fileUrl.match(/\.pdf$/i)) {
+                content = `<iframe src="${fileUrl}" frameborder="0"></iframe>`;
+            } else if (fileUrl.match(/\.(mp4|webm)$/i)) {
+                content = `<video controls><source src="${fileUrl}" type="video/mp4">مرورگر شما از ویدئو پشتیبانی نمی‌کند.</video>`;
+            } else {
+                window.open(fileUrl, "_blank");
+                return;
+            }
+
+            filePreview.innerHTML = content;
+            modal.style.display = "flex";
+        });
+    });
+
+    closeModal.addEventListener('click', () => {
+        modal.style.display = "none";
+        filePreview.innerHTML = "";
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target == modal) {
+            modal.style.display = "none";
+            filePreview.innerHTML = "";
+        }
+    });
+
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const confirmDelete = confirm("آیا از حذف این محتوا مطمئن هستید؟");
+            if (!confirmDelete) return;
+
+            const url = btn.getAttribute('data-delete-url');
+            fetch(url, {
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'}
+            }).then(() => location.reload());
+        });
+    });
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}ثبت‌نام موفق{% endblock %}
+
+{% block content %}
+<style>
+  .success-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px 20px;
+    background: #d9eaf7; 
+    border: 2px solid #4a90e2; 
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+    font-family: 'Vazirmatn', sans-serif;
+  }
+
+  .success-container h2 {
+    color: #2c5ca9; 
+    margin-bottom: 25px;
+    font-weight: 600;
+  }
+
+  .btn {
+    display: inline-block;
+    background-color: #4a90e2; 
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  .btn:hover {
+    background-color: white; 
+  }
+</style>
+
+<div class="success-container" dir="rtl" style="text-align: center;">
+    <h2>✅ ثبت‌نام با موفقیت انجام شد!</h2>
+    <a href="{% url 'home' %}" class="btn">بازگشت به صفحه اصلی</a>
+</div>
+{% endblock %}

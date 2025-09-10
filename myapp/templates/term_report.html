@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>کارنامه ترمی</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body, h2, table, th, td, button, p, div {
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    body {
+      font-size: 14px;
+      background-color: #f4f7f8;
+      padding: 40px 0;
+      margin: 0;
+    }
+
+    .report-container {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .report-box {
+      background-color: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: rgb(0, 0, 0);
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+
+    table th, table td {
+      padding: 5px;
+      border-bottom: 1px solid #ccc;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    .gpa-box {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      align-items: center;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+      color: #007B8F;
+      padding: 15px 0;
+      border: 2px solid #007B8F;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 0 auto 40px auto;
+    }
+
+    .print-button {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 30px auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="report-container">
+    {% if registrations %}
+      <div class="report-box">
+        <h2>کارنامه ترمی</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ردیف</th>
+              <th>نام درس</th>
+              <th>تعداد واحد</th>
+              <th>نام استاد</th>
+              <th>روز و ساعت</th>
+              <th>نمره</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for reg in registrations %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ reg.course.title }}</td>
+              <td>{{ reg.course.unit }}</td>
+              <td>{{ reg.course.teacher.first_name }} {{ reg.course.teacher.last_name }}</td>
+              <td>
+                {{ reg.course.get_day1_display }} {{ reg.course.start_time1|time:"H:i" }} تا {{ reg.course.end_time1|time:"H:i" }}
+                {% if reg.course.day2 %}
+                  <br>
+                  {{ reg.course.get_day2_display }} {{ reg.course.start_time2|time:"H:i" }} تا {{ reg.course.end_time2|time:"H:i" }}
+                {% endif %}
+              </td>
+              <td>
+                {% if reg.grade %}
+                  {{ reg.grade }}
+                {% else %}
+                  ثبت نشده
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="report-box">
+        <p>هیچ درسی ثبت نشده است.</p>
+      </div>
+    {% endif %}
+    {% if gpa %}
+      <div class="gpa-box">
+        <div><strong>معدل کل:</strong> {{ gpa }}</div>
+        <div><strong>تعداد واحدهای قبول شده:</strong> {{ passed_units }}</div>
+        <div><strong>تعداد واحدهای افتاده:</strong> {{ failed_units }}</div>
+      </div>
+    {% endif %}
+    <button class="print-button" onclick="window.print()">چاپ کارنامه</button>
+  </div>
+</body>
+</html>

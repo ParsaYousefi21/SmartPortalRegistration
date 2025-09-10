@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+
+# Virtual environment
+venv/
+env/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+staticfiles/
+.env
+
+# Django migrations
+*/migrations/*
+!*/migrations/__init__.py
+
+# Media files
+media/contents/*
+!.gitkeep
+
+# Exports folder 
+exports/*
+!.gitkeep
+
+# VS Code / PyCharm / IDE
+.vscode/
+.idea/

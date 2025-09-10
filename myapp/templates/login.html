@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}ورود کاربران{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    body, h2, a, div, label, input, button {
+        font-family: 'Vazirmatn', sans-serif;
+    }
+
+    body {
+        background-color: #f5f5f5;
+    }
+
+    .form-container {
+        max-width: 380px;
+        margin: 80px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        text-align: right;
+        direction: rtl;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 22px;
+        color: #333;
+    }
+
+    .form-container label {
+        font-weight: 600;
+        margin-top: 12px;
+        display: block;
+        color: #444;
+        font-size: 14px;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        background-color: #fdfdfd;
+    }
+
+    .form-container button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .form-container button:hover {
+        background-color: #0056b3;
+    }
+
+    .form-container .error-message {
+        color: red;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+</style>
+
+<div class="form-container">
+    <h2>ورود به سامانه</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="error-message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <label for="id_username">نام کاربری</label>
+        {{ form.username }}
+
+        <label for="id_password">رمز عبور</label>
+        {{ form.password }}
+
+        <button type="submit">ورود</button>
+    </form>
+</div>
+{% endblock %}

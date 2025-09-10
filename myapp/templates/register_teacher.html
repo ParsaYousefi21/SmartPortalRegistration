@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>ثبت‌نام معلم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            direction: rtl;
+            background-color: #f5f5f5;
+            padding: 30px;
+        }
+        form {
+            background: #fff;
+            padding: 25px 30px;
+            margin: auto;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-sizing: border-box;  
+        }
+        h2 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;              
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s ease;
+            box-sizing: border-box;       
+            display: block;            
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #555;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            box-sizing: border-box;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #444;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .form-row-horizontal {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .form-row-horizontal > label {
+            margin-left: 10px;
+            min-width: 100px;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .radio-group label {
+            display: inline-block;
+            padding: 6px 14px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #444;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+        .radio-group input[type="radio"]:checked + label {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+        .alert-box {
+            background-color: #fff8e1;
+            color: #856404;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        .error-message {
+            color: #d93025;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .error-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .password-rules p {
+            margin: 3px 0;
+            font-size: 13px;
+        }
+        .password-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h2>ثبت‌نام معلم</h2>
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="error-box">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <label for="id_username">نام کاربری</label>
+        {{ form.username }}
+        {% for error in form.username.errors %}
+            <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <label for="id_first_name">نام</label>
+        {{ form.first_name }}
+
+        <label for="id_last_name">نام خانوادگی</label>
+        {{ form.last_name }}
+
+        <label for="id_teacher_id">کد ملی</label>
+        {{ form.teacher_id }}
+        {% for error in form.teacher_id.errors %}
+            <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <label for="id_date_of_birth">تاریخ تولد</label>
+        {{ form.date_of_birth }}
+        <div class="help-text">تاریخ را به فرمت YYYY/MM/DD وارد کنید</div>
+        {% for error in form.date_of_birth.errors %}
+            <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <label for="id_password">رمز عبور</label>
+        <div class="password-container">
+            {{ form.password }}
+            <span class="toggle-password" id="togglePassword">👁️</span>
+        </div>
+        <div class="password-rules">
+            <p id="ruleLength" style="color:red;">❌ حداقل ۸ کاراکتر</p>
+            <p id="ruleUpper" style="color:red;">❌ حداقل یک حرف بزرگ</p>
+            <p id="ruleLower" style="color:red;">❌ حداقل یک حرف کوچک</p>
+        </div>
+        {% for error in form.password.errors %}
+            <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-row-horizontal">
+            <label>موضوع تدریس:</label>
+            <div class="radio-group">
+                {% for radio in form.subject %}
+                    {{ radio.tag }}<label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                {% endfor %}
+            </div>
+        </div>
+        {% for error in form.subject.errors %}
+            <div class="error-message">{{ error }}</div>
+        {% endfor %}
+
+        <div class="alert-box">
+            🔒 لطفاً نام کاربری و رمز عبور خود را در جایی امن یادداشت کرده و به خاطر بسپارید. این اطلاعات برای بخش ورود ضروری هستند.
+        </div>
+
+        <button type="submit">ثبت‌نام</button>
+    </form>
+
+    <script>
+        const passwordInput = document.getElementById("id_password");
+        const togglePassword = document.getElementById("togglePassword");
+        const ruleLength = document.getElementById("ruleLength");
+        const ruleUpper = document.getElementById("ruleUpper");
+        const ruleLower = document.getElementById("ruleLower");
+
+        let isLengthOk = false;
+        let isUpperOk = false;
+        let isLowerOk = false;
+
+        passwordInput.addEventListener("input", function() {
+            const val = passwordInput.value;
+
+            if (val.length >= 8) {
+                ruleLength.textContent = "✅ حداقل ۸ کاراکتر";
+                ruleLength.style.color = "green";
+                isLengthOk = true;
+            } else {
+                ruleLength.textContent = "❌ حداقل ۸ کاراکتر";
+                ruleLength.style.color = "red";
+                isLengthOk = false;
+            }
+
+            if (/[A-Z]/.test(val)) {
+                ruleUpper.textContent = "✅ حداقل یک حرف بزرگ";
+                ruleUpper.style.color = "green";
+                isUpperOk = true;
+            } else {
+                ruleUpper.textContent = "❌ حداقل یک حرف بزرگ";
+                ruleUpper.style.color = "red";
+                isUpperOk = false;
+            }
+
+            if (/[a-z]/.test(val)) {
+                ruleLower.textContent = "✅ حداقل یک حرف کوچک";
+                ruleLower.style.color = "green";
+                isLowerOk = true;
+            } else {
+                ruleLower.textContent = "❌ حداقل یک حرف کوچک";
+                ruleLower.style.color = "red";
+                isLowerOk = false;
+            }
+        });
+
+        togglePassword.addEventListener("click", function() {
+            if(passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        });
+    </script>
+</body>
+</html>
